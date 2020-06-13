@@ -1,3 +1,4 @@
 data1.sql
 MOCK_DATA.sql
 /server_side/node_modules
+/server_side/package-lock.json
