@@ -1,1 +1,1 @@
-#AJAX progress bar
+# AJAX progress bar
