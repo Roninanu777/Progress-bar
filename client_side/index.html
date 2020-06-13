@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <title>Fetch data</title>
+</head>
+<body style="font-family: 'Varela Round', sans-serif;">
+    <div class="d-flex my-3 justify-content-center">
+        <button id="fetchBtn"  type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter">SUBMIT</button>
+    </div><br/>
+    <div class="container" style="max-width: 600px">
+        <div class="d-flex justify-content-start">
+            <p class="mr-3">
+                Rows Processed: <span id="rowsProcessed">0</span>
+            </p>
+            <p class="ml-3">
+                Time taken: <span id="timeTaken">0 sec</span>
+            </p>
+        </div>
+        <div style="width: 100%; background-color: #ccc;border-radius: 20px" class="myprogress">
+            <div id="progress" style="background-color: #359622;width: 0;border-radius: 15px;height: 10px;transition: width 1s ease-out-in" class="mybar"> 
+            </div>
+        </div>
+    </div>
+    <script>
+        let rows = document.getElementById('rows');
+        let progress = document.getElementById('progress');
+        let progressLabel = document.getElementById('progressLabel');
+        let rowsProcessed = document.getElementById('rowsProcessed');
+        let timeTaken = document.getElementById('timeTaken');
+        document.getElementById('fetchBtn').addEventListener('click', getData);
+        function getData(){
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://localhost:3000/getRows', true);
+            var jsonData;
+            xhr.onreadystatechange = function(){
+                const pre = new Date().getTime();
+                if(this.readyState == 4 && this.status == 200){
+                    jsonData = JSON.parse(this.response);
+                    console.log(jsonData);
+                }
+                const post = new Date().getTime();
+                rowsProcessed.innerText = jsonData.length/1000000 + ' million';
+                timeTaken.innerText = ((post-pre)/1000).toFixed(2) + ' sec';
+            }
+
+            xhr.onprogress = function(pe){
+                if(pe.lengthComputable){
+                    let percent = pe.loaded/pe.total * 100;
+                    progress.style.width = percent + '%';
+                    progressLabel.innerText = percent.toFixed() + '%';
+                    
+                }
+            }
+           
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
